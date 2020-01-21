@@ -5,9 +5,10 @@
 wget https://megares.meglab.org/download/megares_v2.00.zip
 unzip megares_v2.00.zip
 
-
-### The Rscript included in this directory was used to create the abricate formatted version of this db.  
-### also removes SNP dependent sequences.  
+### Notes:
+1. The Rscript included in this directory was used to create the abricate formatted version of this db.  
+2. There is probably a more appropriate way to format this database for abricate.  
+3. There are some resistance genes that require SNP confirmation included in the original MEGARes database.  These have been removed.
 
 ### How to setup this database for use with abricate:
 1. Download and unzip the abricate_megares_reduced.fasta.gz file from this repo.  
