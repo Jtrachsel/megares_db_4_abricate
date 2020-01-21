@@ -16,11 +16,11 @@ unzip megares_v2.00.zip
 4. Run `abricate --setupdb`.  
 
 ### For example, this is how I configured it on my system:  
-`cd ~/reference/`
-`git clone https://github.com/Jtrachsel/megares_db_4_abricate.git`
-`cd megares_db_4_abricate`
-`gunzip abricate_megares_reduced.fasta.gz `
-`cd /home/julian.trachsel/miniconda3/db # wherever your abricate install looks for dbs`
-`mkdir megares`
-`cp ~/reference/megares_db_4_abricate/abricate_megares_reduced.fasta ./megares/sequences`
-`abricate --setupdb`
+`cd ~/reference/`  
+`git clone https://github.com/Jtrachsel/megares_db_4_abricate.git`  
+`cd megares_db_4_abricate`  
+`gunzip abricate_megares_reduced.fasta.gz `  
+`cd /home/julian.trachsel/miniconda3/db # wherever your abricate install looks for dbs`  
+`mkdir megares`  
+`cp ~/reference/megares_db_4_abricate/abricate_megares_reduced.fasta ./megares/sequences`  
+`abricate --setupdb`  
