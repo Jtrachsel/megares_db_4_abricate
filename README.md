@@ -12,7 +12,7 @@ unzip megares_v2.00.zip
 
 ### How to setup this database for use with abricate:
 1. Download and unzip the abricate_megares_reduced.fasta.gz file from this repo.  
-2. Ceate a 'megares' directory where abricate looks for databases.  Can run the `abricate --datadir` command to find this path.  
+2. Ceate a 'megares' directory where abricate looks for databases.  Can run the `abricate --help` command to find this path. It should be listed in the DATABASES section, next to the --datadir option.  
 3. Move the decompressed fasta into this new directory with the name `sequences`.  
 4. Run `abricate --setupdb`.  
 
