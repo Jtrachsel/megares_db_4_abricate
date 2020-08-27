@@ -1,49 +1,48 @@
-setwd('~/reference/megares/')
-
-
 library(tidyverse)
 library(Biostrings)
 
-mapping <- read_csv('megares_to_external_header_mappings_v2.00.csv')
+# read in fasta_header mappings
+mapping <- read_csv('megares_to_external_header_mappings_v2.00.csv') 
 
-f1 <- mapping$MEGARes_v2_header
+# split out info we need to build abricate fasta header
+# and build abricate fasta header
+test <- 
+  mapping %>% 
+  separate(MEGARes_v2_header, sep = '\\|', remove = FALSE, extra = 'merge',
+           into = c('ACCNO', 'BROAD_CLASS', 'RESISTANCE', 'CLASS', 'GENE_NAME')) %>% 
+  mutate(DESC=paste(BROAD_CLASS, CLASS, sep = '|')) %>% 
+  mutate(first_part=paste(Database, GENE_NAME, ACCNO, RESISTANCE, sep = '~~~'), 
+         abricate_header=paste(first_part, DESC, sep = ' '))
 
+# this defines the genes we want in the final product
+# Goal here is to only keep the metal/biocide resistance from BacMet database
+GOOD_GENES <- 
+  test %>%
+  filter(BROAD_CLASS != 'Drugs') %>% 
+  filter(Database == 'BacMet') %>%
+  filter(!(grepl('Requires',GENE_NAME))) %>% 
+  pull(abricate_header)
 
-'>DB~~~ID~~~ACC~~~RESISTANCES DESC'
-'MEGARes~~~ID'
+# read in the megares db fasta
+megares_orig <- readDNAStringSet('megares_modified_database_v2.00.fasta')
 
-GENE_NAME <- sub('(.*)\\|(.*)\\|(.*)\\|(.*)\\|(.*)','\\5',f1)
-CLASS <- sub('(.*)\\|(.*)\\|(.*)\\|(.*)\\|(.*)','\\4',f1)
-RESISTANCE <- sub('(.*)\\|(.*)\\|(.*)\\|(.*)\\|(.*)','\\3',f1)
-BROAD_CLASS <- sub('(.*)\\|(.*)\\|(.*)\\|(.*)\\|(.*)','\\2',f1)
-ACCNO <- sub('(.*)\\|(.*)\\|(.*)\\|(.*)\\|(.*)','\\1',f1)
-DB <- rep('MEGARes', length(ACCNO))
+# check that the fasta headers we expect are there
+all(names(megares_orig) == test$MEGARes_v2_header)
 
-DESC <- paste(BROAD_CLASS, CLASS, sep = '|')
+# rename the sequences in the megares db (this will set fasta headers)
+names(megares_orig) <- test$abricate_header
 
-first_part <- paste(DB, GENE_NAME, ACCNO, RESISTANCE, sep = '~~~')
-
-abricate_header <- paste(first_part, DESC, sep = ' ')
-
-ACCNO[1]
-first_part[1]
-abricate_header[1]
-
-
-names_df <- data.frame(new=abricate_header, old=f1) %>% write_tsv('fasta_header_map.tsv')
-
-megares_orig <- readDNAStringSet('megares_full_database_v2.00.fasta')
-
-names(megares_orig) == names_df$old
-
-names(megares_orig) <- names_df$new
-
+# write out the megares database with abricate style fasta headers
 writeXStringSet(megares_orig, filepath = 'abricate_megares.fasta')
 
-need_SNP <- grep('Require',names(megares_orig))
-# need_SNP
-megares_reduced <- megares_orig[-need_SNP]
+# generate a vector of indexes corresponding to genes we want in the final 
+# abricate fasta
+KEEPERS <- which(names(megares_orig) %in% GOOD_GENES)
 
+# subset the megares fasta to only BacMet Metals/Biocides
+megares_reduced <- megares_orig[KEEPERS]
+
+# write out the metals/biocides fasta
 writeXStringSet(megares_reduced, filepath = 'abricate_megares_reduced.fasta')
 
 
