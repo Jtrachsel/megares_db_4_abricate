@@ -2,13 +2,14 @@
 
 
 ### MEGARes db was obtained here:  
-wget https://megares.meglab.org/download/megares_v2.00.zip
-unzip megares_v2.00.zip
+wget https://megares.meglab.org/download/megares_v2.00.zip  
+unzip megares_v2.00.zip  
 
 ### Notes:
 1. The Rscript included in this directory was used to create the abricate formatted version of this db.  
 2. There is probably a more appropriate way to format this database for abricate.  
-3. There are some resistance genes that require SNP confirmation included in the original MEGARes database.  These have been removed.
+3. There are some resistance genes that require SNP confirmation included in the original MEGARes database.  These have been removed.  
+4. This now only includes sequences from the BacMet database that are classified as conferring metal/biocide resistance.  All drug resistance has been removed from the reduced fasta.  
 
 ### How to setup this database for use with abricate:
 1. Download and unzip the abricate_megares_reduced.fasta.gz file from this repo.  
